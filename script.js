@@ -4,13 +4,23 @@ var prevItem=0;
 var clear = 0;
 
 
-var getNumbers = function(){
+var getNumbers = function(item){
 	if(currentItem==0){
-		currentItem = this.id;
+		if(!item){
+			currentItem = this.id;
+		}
+		else{
+			currentItem = item;
+		}
 		console.log(currentItem);
 	}
 	else if(currentItem!=0){
-		currentItem = currentItem + "" + this.id;
+		if(!item){
+			currentItem = currentItem + "" + this.id;
+		}
+		else{
+			currentItem = currentItem + "" + item;
+		}
 		console.log(currentItem);	
 	}
 	if(clear==1){
@@ -19,8 +29,13 @@ var getNumbers = function(){
 	document.getElementById("result").innerHTML = currentItem;
 }
 
-var callOp = function(){
-	op = this.value;
+var callOp = function(operation){
+	if(!operation){
+		op = this.value;
+	}
+	else{
+		op = operation;
+	}
 	clear=1;
 	prevItem = currentItem;
 	currentItem = 0;
@@ -32,6 +47,7 @@ var callOp = function(){
 }
 
 var runOp = function(){
+	console.log("here");
 	var retNum=0;
 	prevItem = parseInt(prevItem);
 	currentItem = parseInt(currentItem);
@@ -63,6 +79,13 @@ var clearData = function(){
 }
 
 
+
+function replaceValue(value){
+	document.getElementById("result").innerHTML = "";
+	document.getElementById("result").innerHTML = value;
+}
+
+
 window.onload = function(){
 	document.getElementById("0").onclick = getNumbers;
 	document.getElementById("1").onclick = getNumbers;
@@ -81,5 +104,26 @@ window.onload = function(){
 	document.getElementById("quotient").onclick = callOp;
 	document.getElementById("run").onclick = runOp;
 	document.getElementById("clear").onclick = clearData;
+
+	document.onkeypress = function(evt) {
+    	evt = evt || window.event;
+    	var charCode = evt.keyCode || evt.which;
+    	var charStr = String.fromCharCode(charCode);
+			if(charStr === "+" || charStr=== "-" || charStr === "*" || charStr==="/"){
+					callOp(charStr);
+			}
+			else if(charStr=== "=" || charCode ===13){
+					runOp();
+			}
+			else if(parseInt(charStr) >="0" || parseInt(charStr) <= "9"){
+				  getNumbers(charStr);
+			}	
+			console.log(charStr + "" + charCode);
+		
+	};
+
 }
+
+
+
 
